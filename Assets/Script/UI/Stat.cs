@@ -1,11 +1,17 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+
+
+// 슬라이더에 사용될 스텟
 public class Stat : MonoBehaviour
 {
     public float curValue;
     public float passiveValue; // 자동 변화량
     [SerializeField] private float startValue = 100;
     [SerializeField] private float maxValue = 100;
+    [SerializeField] private Image fill;
+    private Color originColor;
 
     //components
     private Slider imgBar;
@@ -18,6 +24,7 @@ public class Stat : MonoBehaviour
     {
         curValue = startValue;
         imgBar.value = GetPercent();
+        originColor = fill.color;
     }
     private float GetPercent()
     {
@@ -36,5 +43,38 @@ public class Stat : MonoBehaviour
     public bool IsFull()
     {
         return curValue >= maxValue;
+    }
+
+    // 게이지를 회색으로 변경, 원복
+    public void SetGray(bool isGray)
+    {
+        if (isGray)
+        {
+            //(0.299f * R) + (0.587f * G) + (0.114f * B)
+            if (fill != null)
+            {
+                Color gray = new Color(1,1,1,1);
+                gray.r = 0.299f * originColor.r;
+                gray.g = 0.587f * originColor.g;
+                gray.b = 0.114f * originColor.b;
+                gray.a = originColor.a;
+                fill.color = gray;
+            }
+            else
+            {
+                Debug.LogWarning("fillArea is null");
+            }
+        }
+        else
+        {
+            if (fill != null)
+            {
+                fill.color = originColor;
+            }
+            else
+            {
+                Debug.LogWarning("fillArea is null");
+            }
+        }
     }
 }

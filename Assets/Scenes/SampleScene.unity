@@ -2190,9 +2190,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curValue: 100
-  passiveValue: 3
+  passiveValue: 8
   startValue: 50
   maxValue: 100
+  fill: {fileID: 779163083}
 --- !u!1 &1301032531
 GameObject:
   m_ObjectHideFlags: 0
@@ -2755,6 +2756,7 @@ MonoBehaviour:
   passiveValue: 0
   startValue: 100
   maxValue: 100
+  fill: {fileID: 2064814911}
 --- !u!1 &1636425152
 GameObject:
   m_ObjectHideFlags: 0
@@ -5179,8 +5181,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   sprintSpeed: 7
-  boostSpeed: 10
-  sprintEnergy: 1
+  sprintEnergy: 10
   jumpPower: 40
   jumpEnergy: 10
   groundLayer:

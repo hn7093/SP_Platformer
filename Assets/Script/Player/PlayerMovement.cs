@@ -10,11 +10,9 @@ public class PlayerMovement : MonoBehaviour
     [Header("Movement")]
     public float moveSpeed = 5f;
     public float sprintSpeed = 7f;
-    public float boostSpeed = 10f;
     public float sprintEnergy = 10f;
     public float jumpPower = 5f;
     public float jumpEnergy = 10f;
-    private float curSpeed;
     private Vector2 curMovementInput;
     public LayerMask groundLayer;
 
@@ -28,6 +26,8 @@ public class PlayerMovement : MonoBehaviour
 
     public bool canLook = true;
     public Action indentory;
+    private bool tryDash;
+    private bool isDash;
     // components
     private Rigidbody _rigidbody;
     private PlayerStat _playerStat;
@@ -39,32 +39,46 @@ public class PlayerMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        curSpeed = moveSpeed;
         Cursor.lockState = CursorLockMode.Locked; // 포인터 숨김
     }
-
+    void Update()
+    {
+        // 달릴 수 있다면 스테미너 소모
+        if (tryDash)
+        {
+            // 달리기
+            isDash = _playerStat.UseStamina(Time.deltaTime * sprintEnergy);
+        }
+        else
+        {
+            isDash = false;
+        }
+    }
     void FixedUpdate()
     {
-        Move();
+
         if (canLook)
         {
-            CameraLook();
+            Rotate();
         }
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            StartCoroutine(BuffSpeed());
-        }
+        Move();
     }
 
     void Move()
     {
-        Vector3 dir = transform.forward * curMovementInput.y + transform.right * curMovementInput.x;
-        dir *= curSpeed;
-        dir.y = _rigidbody.velocity.y; // 점프 대비 현재값 유지
-
-        _rigidbody.velocity = dir;
+        Vector3 forward = new Vector3(cameraContainer.forward.x, 0f, cameraContainer.forward.z).normalized;
+        Vector3 right = new Vector3(cameraContainer.right.x, 0f, cameraContainer.right.z).normalized;
+        Vector3 moveDir = forward * curMovementInput.y + right * curMovementInput.x;
+        //transform.forward = moveDir;
+        transform.position += moveDir * (isDash ? sprintSpeed : moveSpeed) * Time.deltaTime;
+        Debug.Log(isDash);
+        // 달리고 있는중이라면 자연 회복 중지
+        if (isDash)
+        {
+            _playerStat.ActiveStemina(false);
+        }
     }
-    void CameraLook()
+    void Rotate()
     {
         // 좌우
         CamCurXRot += mouseDelta.y * lookSensitivity;
@@ -112,15 +126,14 @@ public class PlayerMovement : MonoBehaviour
 
     public void OnSprint(InputAction.CallbackContext context)
     {
-        if (context.phase == InputActionPhase.Performed && _playerStat.UseStamina(sprintEnergy))
+        if (context.phase == InputActionPhase.Performed)
         {
-            Debug.Log("Sprint");
-            curSpeed = sprintSpeed;
+            tryDash = true;
         }
         else if (context.phase == InputActionPhase.Canceled)
         {
-            Debug.Log("NO Sprint");
-            curSpeed = moveSpeed;
+            tryDash = false;
+            _playerStat.ActiveStemina(true);
         }
     }
     bool IsGrounded()
@@ -141,12 +154,5 @@ public class PlayerMovement : MonoBehaviour
         bool toggle = Cursor.lockState == CursorLockMode.Locked;
         Cursor.lockState = toggle ? CursorLockMode.None : CursorLockMode.Locked;
         canLook = !toggle;
-    }
-
-    IEnumerator BuffSpeed()
-    {
-        curSpeed = boostSpeed;
-        yield return new WaitForSeconds(5f);
-        curSpeed = moveSpeed;
     }
 }
