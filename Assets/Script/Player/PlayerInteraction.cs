@@ -33,7 +33,7 @@ public class PlayerInteraction : MonoBehaviour
                 if (hit.collider.gameObject != curInteractGameObject)
                 {
                     curInteractGameObject = hit.collider.gameObject;
-                    curInteractable = hit.collider.GetComponent<IInteractable>();
+                    curInteractable = curInteractGameObject.GetComponent<IInteractable>();
                     promptText.gameObject.SetActive(true);
                     promptText.text = curInteractable.GetInteractPrompt();
                 }

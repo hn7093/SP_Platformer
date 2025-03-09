@@ -15,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     public float jumpEnergy = 10f;
     private Vector2 curMovementInput;
     public LayerMask groundLayer;
+    public GameObject SpeedEffect;
 
     [Header("Look")]
     public Transform cameraContainer;
@@ -23,11 +24,15 @@ public class PlayerMovement : MonoBehaviour
     private float CamCurXRot = 0f;
     public float lookSensitivity = 0.1f;
     private Vector2 mouseDelta;
-
     public bool canLook = true;
+
+    // menber
     public Action indentory;
     private bool tryDash;
     private bool isDash;
+    private float speedBuffScale = 2.3f;
+    private bool isSpeedBuff;
+
     // components
     private Rigidbody _rigidbody;
     private PlayerStat _playerStat;
@@ -40,6 +45,7 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked; // 포인터 숨김
+        SpeedEffect?.SetActive(false);
     }
     void Update()
     {
@@ -52,6 +58,10 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             isDash = false;
+        }
+        if(Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            StartCoroutine(BuffSpeed());
         }
     }
     void FixedUpdate()
@@ -70,8 +80,10 @@ public class PlayerMovement : MonoBehaviour
         Vector3 right = new Vector3(cameraContainer.right.x, 0f, cameraContainer.right.z).normalized;
         Vector3 moveDir = forward * curMovementInput.y + right * curMovementInput.x;
         //transform.forward = moveDir;
-        transform.position += moveDir * (isDash ? sprintSpeed : moveSpeed) * Time.deltaTime;
-        Debug.Log(isDash);
+        // 입력에 방향에 따라 이동, 속도는 걷기 or 뛰기  * 스피드 버프
+        transform.position += moveDir * (isDash ? sprintSpeed : moveSpeed)
+                            * (isSpeedBuff ? speedBuffScale : 1)
+                            * Time.deltaTime;
         // 달리고 있는중이라면 자연 회복 중지
         if (isDash)
         {
@@ -151,8 +163,18 @@ public class PlayerMovement : MonoBehaviour
     }
     void ToggleCursor()
     {
+        // 마우스 커서 활성/비활성
         bool toggle = Cursor.lockState == CursorLockMode.Locked;
         Cursor.lockState = toggle ? CursorLockMode.None : CursorLockMode.Locked;
         canLook = !toggle;
+    }
+
+    IEnumerator BuffSpeed()
+    {
+        isSpeedBuff = true;
+        SpeedEffect?.SetActive(true);
+        yield return new WaitForSeconds(3f);
+        SpeedEffect?.SetActive(false);
+        isSpeedBuff = false;
     }
 }

@@ -14,7 +14,7 @@ TagManager:
   - UI
   - Player
   - Interaction
-  - 
+  - Ground
   - 
   - 
   - 
@@ -41,4 +41,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Visual Effect
+    uniqueID: 2431068993
     locked: 0
