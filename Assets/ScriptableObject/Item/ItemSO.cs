@@ -14,12 +14,13 @@ public enum EatableType
     Stemina, // 스테미너
     Speed, // 스피드
     Jump, // 점프
-    
+
 }
 public enum ItemType
 {
     Eatable, // 소비
     Resource, // 자원
+    Equip, // 장비
 }
 
 [CreateAssetMenu(fileName ="Item", menuName = "ItemData")]

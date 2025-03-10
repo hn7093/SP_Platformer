@@ -14,7 +14,6 @@ public class UIInventory : MonoBehaviour
     public TextMeshProUGUI selectedStatName;
     public TextMeshProUGUI selectedStatValue;
     public Button useButton;
-    public Button dropButton;
     public Button equipButton;
     public Button unequipButton;
 
@@ -37,7 +36,6 @@ public class UIInventory : MonoBehaviour
 
         // 버튼 이벤트 등록
         useButton.onClick.AddListener(OnUseButton);
-        dropButton.onClick.AddListener(OnDropButton);
         equipButton.onClick.AddListener(OnEquipButton);
         unequipButton.onClick.AddListener(OnUnequipButton);
 
@@ -65,7 +63,6 @@ public class UIInventory : MonoBehaviour
         selectedStatValue.text = string.Empty;
 
         useButton.gameObject.SetActive(false);
-        dropButton.gameObject.SetActive(false);
         equipButton.gameObject.SetActive(false);
         unequipButton.gameObject.SetActive(false);
     }
@@ -185,9 +182,8 @@ public class UIInventory : MonoBehaviour
         }
 
         useButton.gameObject.SetActive(selectedItem.type == ItemType.Eatable);
-        dropButton.gameObject.SetActive(true);
-        //equipButton.gameObject.SetActive(selectedItem.type == ItemType.Equipable && !itemSlots[index].isEquipped);
-        //unequipButton.gameObject.SetActive(selectedItem.type == ItemType.Equipable && itemSlots[index].isEquipped);
+        equipButton.gameObject.SetActive(selectedItem.type == ItemType.Equip && !itemSlots[index].isEquipped);
+        unequipButton.gameObject.SetActive(selectedItem.type == ItemType.Equip && itemSlots[index].isEquipped);
     }
 
     public void OnUseButton()
@@ -215,13 +211,6 @@ public class UIInventory : MonoBehaviour
             RemoveSelectItem();
         }
     }
-    public void OnDropButton()
-    {
-        // 드롭 아이템 생성
-        ThrowItem(selectedItem);
-        // 인벤토리에서 제거
-        RemoveSelectItem();
-    }
 
     // 인벤토리에서 1개 제거
     void RemoveSelectItem()
@@ -248,14 +237,30 @@ public class UIInventory : MonoBehaviour
 
         itemSlots[selectedIndex].isEquipped = true;
         curEquipIndex = selectedIndex;
-        //CharacterManager.Instance.Player.equipment.EquipNew(selectedItem);
+        for (int i = 0; i < selectedItem.eatableData.Length; i++)
+        {
+            switch (selectedItem.eatableData[i].type)
+            {
+                case EatableType.Jump:
+                    movement.BuffJumpForce(selectedItem.eatableData[i].value);
+                    break;
+            }
+        }
         UpdateUI();
         SelectItem(selectedIndex);
     }
     void UnEquip(int index)
     {
         itemSlots[index].isEquipped = false;
-        //CharacterManager.Instance.Player.equipment.UnEquip();
+        for (int i = 0; i < selectedItem.eatableData.Length; i++)
+        {
+            switch (selectedItem.eatableData[i].type)
+            {
+                case EatableType.Jump:
+                    movement.BuffJumpForce(-selectedItem.eatableData[i].value);
+                    break;
+            }
+        }
         UpdateUI();
         if (selectedIndex == index)
         {

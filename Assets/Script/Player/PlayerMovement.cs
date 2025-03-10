@@ -233,6 +233,10 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(duration);
         maxJumpCount = 0;
     }
+    public void BuffJumpForce(float amount)
+    {
+        jumpPower += amount;
+    }
 
     void CheckClimbing()
     {
