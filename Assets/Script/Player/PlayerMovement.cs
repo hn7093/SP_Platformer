@@ -89,7 +89,10 @@ public class PlayerMovement : MonoBehaviour
         if (canClimbing)
         {
             // 벽 오르기
-            _rigidbody.useGravity = curMovementInput.y <= 0;
+            _rigidbody.useGravity = curMovementInput.y < 0;
+            Vector3 vel = _rigidbody.velocity;
+            vel.y = 0;
+            _rigidbody.velocity = vel;
             Vector3 moveDir = new Vector3(0, curMovementInput.y, curMovementInput.x);
             transform.position += moveDir * (isDash ? sprintSpeed : moveSpeed) * Time.deltaTime;
         }
