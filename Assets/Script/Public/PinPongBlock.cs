@@ -14,7 +14,6 @@ public class PinPongBlock : MonoBehaviour
     {
 
     }
-    // Start is called before the first frame update
     void Update()
     {
         if (canMoving)

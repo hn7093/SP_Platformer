@@ -25,7 +25,6 @@ public class RaycastTrap : MonoBehaviour
         {
             if (lastCheckTime + interval <= Time.time)
             {
-                Debug.Log("SASD");
                 lastCheckTime = Time.time;
                 _animator.SetTrigger(_animAction);
             }
