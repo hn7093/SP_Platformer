@@ -15,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     public float jumpEnergy = 10f;
     private Vector2 curMovementInput;
     public LayerMask groundLayer;
+    public LayerMask climbingLayer;
     public GameObject SpeedEffect;
 
     [Header("Look")]
@@ -30,8 +31,12 @@ public class PlayerMovement : MonoBehaviour
     public Action indentory;
     private bool tryDash;
     private bool isDash;
-    private float speedBuffScale = 2.3f;
+    private float speedBuffScale = 1.3f;
     private bool isSpeedBuff;
+
+    private bool canJump = true;
+    private bool canClimbing = false;
+    private float originMass;
 
     // components
     private Rigidbody _rigidbody;
@@ -40,6 +45,7 @@ public class PlayerMovement : MonoBehaviour
     {
         _rigidbody = GetComponent<Rigidbody>();
         _playerStat = GetComponent<PlayerStat>();
+        originMass = _rigidbody.mass;
     }
     // Start is called before the first frame update
     void Start()
@@ -59,14 +65,16 @@ public class PlayerMovement : MonoBehaviour
         {
             isDash = false;
         }
-        if(Input.GetKeyDown(KeyCode.Alpha3))
+        if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            StartCoroutine(BuffSpeed());
+            StartCoroutine(BuffMoveSpeed());
         }
+        Debug.Log(canClimbing);
     }
     void FixedUpdate()
     {
-
+        CheckGrounded();
+        CheckClimbing();
         if (canLook)
         {
             Rotate();
@@ -78,12 +86,22 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector3 forward = new Vector3(cameraContainer.forward.x, 0f, cameraContainer.forward.z).normalized;
         Vector3 right = new Vector3(cameraContainer.right.x, 0f, cameraContainer.right.z).normalized;
-        Vector3 moveDir = forward * curMovementInput.y + right * curMovementInput.x;
-        //transform.forward = moveDir;
-        // 입력에 방향에 따라 이동, 속도는 걷기 or 뛰기  * 스피드 버프
-        transform.position += moveDir * (isDash ? sprintSpeed : moveSpeed)
-                            * (isSpeedBuff ? speedBuffScale : 1)
-                            * Time.deltaTime;
+        if (canClimbing)
+        {
+            _rigidbody.useGravity = curMovementInput.y <= 0;
+            Vector3 moveDir = new Vector3(0, curMovementInput.y, curMovementInput.x);
+            transform.position += moveDir* (isDash ? sprintSpeed : moveSpeed) * Time.deltaTime;
+        }
+        else
+        {
+            _rigidbody.useGravity = true;
+            // 입력에 방향에 따라 이동, 속도는 걷기 or 뛰기  * 스피드 버프
+            Vector3 moveDir = forward * curMovementInput.y + right * curMovementInput.x;
+            transform.position += moveDir
+                                * (isDash ? sprintSpeed : moveSpeed)
+                                * (isSpeedBuff ? speedBuffScale : 1)
+                                * Time.deltaTime;
+        }
         // 달리고 있는중이라면 자연 회복 중지
         if (isDash)
         {
@@ -119,7 +137,7 @@ public class PlayerMovement : MonoBehaviour
     }
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (context.phase == InputActionPhase.Started && IsGrounded())
+        if (context.phase == InputActionPhase.Started && canJump)
         {
             if (_playerStat.UseStamina(jumpEnergy))
             {
@@ -148,7 +166,7 @@ public class PlayerMovement : MonoBehaviour
             _playerStat.ActiveStemina(true);
         }
     }
-    bool IsGrounded()
+    bool CheckGrounded()
     {
         // 아래로 레이캐스트
         Ray footRay = new Ray(transform.position + (transform.forward * 0.2f) + (transform.up * 0.01f), Vector3.down);
@@ -156,9 +174,11 @@ public class PlayerMovement : MonoBehaviour
         // 땅과 가까운지 검사
         if (Physics.Raycast(footRay, 0.1f, groundLayer))
         {
+            canJump = true;
             return true;
         }
 
+        canJump = false;
         return false;
     }
     void ToggleCursor()
@@ -169,12 +189,31 @@ public class PlayerMovement : MonoBehaviour
         canLook = !toggle;
     }
 
-    IEnumerator BuffSpeed()
+    public void BuffSpeed(float amount)
+    {
+        speedBuffScale = 1.0f + amount / 100.0f;
+        StartCoroutine(BuffMoveSpeed());
+    }
+    IEnumerator BuffMoveSpeed()
     {
         isSpeedBuff = true;
         SpeedEffect?.SetActive(true);
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(10f);
         SpeedEffect?.SetActive(false);
         isSpeedBuff = false;
+    }
+
+    void CheckClimbing()
+    {
+        // 공중에 있을 때
+        if (!CheckGrounded())
+        {
+            Ray ray = new Ray(transform.position + transform.forward * 0.3f, transform.forward);
+            canClimbing = Physics.Raycast(ray, 0.2f, climbingLayer);
+        }
+        else
+        {
+            canClimbing = false;
+        }
     }
 }

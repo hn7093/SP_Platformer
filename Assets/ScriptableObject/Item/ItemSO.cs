@@ -6,12 +6,14 @@ using UnityEngine;
 public class ItemDataEatable
 {
     public EatableType type;
-    public float value; // 회복량
+    public float value; // 회복량, 버프량
 }
 public enum EatableType
 {
     Health, // 체력
-    Stemina // 스테미너
+    Stemina, // 스테미너
+    Speed, // 스피드
+    
 }
 public enum ItemType
 {
@@ -25,6 +27,7 @@ public class ItemSO : ScriptableObject
     [Header("Info")]
     public string displayName;
     public string description;
+    public ItemType type;
     public Sprite icon;
     public GameObject dropPrefab;
 
