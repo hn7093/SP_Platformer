@@ -88,9 +88,10 @@ public class PlayerMovement : MonoBehaviour
         Vector3 right = new Vector3(cameraContainer.right.x, 0f, cameraContainer.right.z).normalized;
         if (canClimbing)
         {
+            // 벽 오르기
             _rigidbody.useGravity = curMovementInput.y <= 0;
             Vector3 moveDir = new Vector3(0, curMovementInput.y, curMovementInput.x);
-            transform.position += moveDir* (isDash ? sprintSpeed : moveSpeed) * Time.deltaTime;
+            transform.position += moveDir * (isDash ? sprintSpeed : moveSpeed) * Time.deltaTime;
         }
         else
         {
@@ -137,11 +138,17 @@ public class PlayerMovement : MonoBehaviour
     }
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (context.phase == InputActionPhase.Started && canJump)
+        if (context.phase == InputActionPhase.Started)
         {
-            if (_playerStat.UseStamina(jumpEnergy))
+            if (canJump && _playerStat.UseStamina(jumpEnergy) )
             {
+                // 일반 점프
                 _rigidbody.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
+            }
+            else if (canClimbing && _playerStat.UseStamina(jumpEnergy))
+            {
+                // 벽 점프
+                _rigidbody.AddForce((Vector3.up + Vector3.back) * jumpPower, ForceMode.Impulse);
             }
         }
     }
