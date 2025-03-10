@@ -35,6 +35,8 @@ public class PlayerMovement : MonoBehaviour
     private bool isSpeedBuff;
 
     private bool canJump = true;
+    private int jumpCount = 0;
+    private int maxJumpCount = 0; // 공중 점프 가능 횟수
     private bool canClimbing = false;
     private float originMass;
 
@@ -67,9 +69,8 @@ public class PlayerMovement : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            StartCoroutine(BuffMoveSpeed());
+            BuffJump(10f);
         }
-        Debug.Log(canClimbing);
     }
     void FixedUpdate()
     {
@@ -143,9 +144,15 @@ public class PlayerMovement : MonoBehaviour
     {
         if (context.phase == InputActionPhase.Started)
         {
-            if (canJump && _playerStat.UseStamina(jumpEnergy) )
+            if (canJump && _playerStat.UseStamina(jumpEnergy))
             {
                 // 일반 점프
+                _rigidbody.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
+            }
+            else if ((jumpCount < maxJumpCount) && _playerStat.UseStamina(jumpEnergy))
+            {
+                // 공중 점프
+                jumpCount++;
                 _rigidbody.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
             }
             else if (canClimbing && _playerStat.UseStamina(jumpEnergy))
@@ -182,9 +189,11 @@ public class PlayerMovement : MonoBehaviour
         Ray footRay = new Ray(transform.position + (transform.forward * 0.2f) + (transform.up * 0.01f), Vector3.down);
 
         // 땅과 가까운지 검사
-        if (Physics.Raycast(footRay, 0.1f, groundLayer))
+        if (Physics.Raycast(footRay, 0.05f, groundLayer))
         {
             canJump = true;
+            if (_rigidbody.velocity.y == 0.0f)
+                jumpCount = 0;
             return true;
         }
 
@@ -202,6 +211,7 @@ public class PlayerMovement : MonoBehaviour
     public void BuffSpeed(float amount)
     {
         speedBuffScale = 1.0f + amount / 100.0f;
+        StopCoroutine(BuffMoveSpeed());
         StartCoroutine(BuffMoveSpeed());
     }
     IEnumerator BuffMoveSpeed()
@@ -212,11 +222,22 @@ public class PlayerMovement : MonoBehaviour
         SpeedEffect?.SetActive(false);
         isSpeedBuff = false;
     }
+    public void BuffJump(float duration)
+    {
+        StopCoroutine(BuffJumpCount(duration));
+        StartCoroutine(BuffJumpCount(duration));
+    }
+    IEnumerator BuffJumpCount(float duration)
+    {
+        maxJumpCount = 1;
+        yield return new WaitForSeconds(duration);
+        maxJumpCount = 0;
+    }
 
     void CheckClimbing()
     {
         // 공중에 있을 때
-        if (!CheckGrounded())
+        if (!canJump)
         {
             Ray ray = new Ray(transform.position + transform.forward * 0.3f, transform.forward);
             canClimbing = Physics.Raycast(ray, 0.2f, climbingLayer);

@@ -13,6 +13,7 @@ public enum EatableType
     Health, // 체력
     Stemina, // 스테미너
     Speed, // 스피드
+    Jump, // 점프
     
 }
 public enum ItemType

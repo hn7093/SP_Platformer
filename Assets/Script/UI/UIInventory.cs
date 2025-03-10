@@ -207,6 +207,9 @@ public class UIInventory : MonoBehaviour
                     case EatableType.Speed:
                         movement.BuffSpeed(selectedItem.eatableData[i].value);
                         break;
+                    case EatableType.Jump:
+                        movement.BuffJump(selectedItem.eatableData[i].value);
+                        break;
                 }
             }
             RemoveSelectItem();
