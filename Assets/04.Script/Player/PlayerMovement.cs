@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour
@@ -81,8 +81,11 @@ public class PlayerMovement : MonoBehaviour
             Rotate();
         }
         Move();
+        if (transform.position.y < -12)
+        {
+            ResetPosition();
+        }
     }
-
     void Move()
     {
         Vector3 forward = new Vector3(cameraContainer.forward.x, 0f, cameraContainer.forward.z).normalized;
@@ -183,6 +186,13 @@ public class PlayerMovement : MonoBehaviour
             _playerStat.ActiveStemina(true);
         }
     }
+    public void OnReset(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Started)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+    }
     bool CheckGrounded()
     {
         // 아래로 레이캐스트
@@ -250,5 +260,9 @@ public class PlayerMovement : MonoBehaviour
         {
             canClimbing = false;
         }
+    }
+    public void ResetPosition()
+    {
+        transform.position = new Vector3(3, 0, -3);
     }
 }
