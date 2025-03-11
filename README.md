@@ -27,7 +27,7 @@
 
 📸 스크린샷
 ![image](https://github.com/user-attachments/assets/934ab3b1-562b-491d-87d2-a49d2ed40f9d)
-![image](https://github.com/user-attachments/assets/12722941-f80b-4927-85ac-5398e32cc274)
+![image](https://github.com/user-attachments/assets/78e139b0-7c83-43e8-93bc-03eb0815a5be)
 ![image](https://github.com/user-attachments/assets/051f5668-34fc-48bb-97cd-c312c61eade7)
 
 
