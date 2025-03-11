@@ -16,10 +16,6 @@ public class LauncherBlock : MonoBehaviour
     {
         _animator = GetComponent<Animator>();
     }
-    private void Start()
-    {
-        InvokeRepeating("OnLaunch", 0, interval);
-    }
     void OnLaunch()
     {
         for(int i = 0; i<objs.Count; i++)
@@ -34,6 +30,8 @@ public class LauncherBlock : MonoBehaviour
         {
             objs.Add(rigidbody);
         }
+        // 오브젝트 검사사 interval후 동작
+        Invoke("OnLaunch", interval);
     }
     private void OnTriggerExit(Collider other)
     {

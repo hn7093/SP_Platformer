@@ -1485,7 +1485,6 @@ MonoBehaviour:
   curInteractGameObject: {fileID: 0}
   maxCheckDistance: 4
   checkRate: 0.05
-  interactTransform: {fileID: 8569025324692090277}
 --- !u!114 &3183977292807030185
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1501,7 +1500,7 @@ MonoBehaviour:
   movement: {fileID: 0}
   stat: {fileID: 0}
   item: {fileID: 0}
-  dropPosition: {fileID: 0}
+  dropPosition: {fileID: 8569025324692090277}
 --- !u!1 &3615878929501322797
 GameObject:
   m_ObjectHideFlags: 0
@@ -2008,8 +2007,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5228170983159519217}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.0914273, y: -0, z: -0, w: 0.99581176}
-  m_LocalPosition: {x: 0, y: 0, z: -2.700008}
+  m_LocalRotation: {x: -0.091427274, y: -0, z: -0, w: 0.99581176}
+  m_LocalPosition: {x: 0, y: 0, z: -2.7000084}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
