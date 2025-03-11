@@ -14274,6 +14274,11 @@ PrefabInstance:
       propertyPath: promptText
       value: 
       objectReference: {fileID: 1732635158}
+    - target: {fileID: 5392434797020674446, guid: 8b49a6095c2d56e48b79466c551d5fa3,
+        type: 3}
+      propertyPath: maxCheckDistance
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 5546409944293382539, guid: 8b49a6095c2d56e48b79466c551d5fa3,
         type: 3}
       propertyPath: m_LocalPosition.x
