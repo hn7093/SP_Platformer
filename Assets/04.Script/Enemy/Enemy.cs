@@ -18,12 +18,12 @@ public class Enemy : MonoBehaviour, IDamagable
 
     [Header("AI")]
     private NavMeshAgent agent;
-    public float detectDistance = 5f;
+    public float detectDistance = 20f;
     private AIState aiState;
 
     [Header("Wandering")]
-    public float minWanderDistance = 5f;
-    public float maxWanderDistance = 10f;
+    public float minWanderDistance = 2f;
+    public float maxWanderDistance = 5f;
     public float minWanderWaitTime = 1;
     public float maxWanderWaitTime = 5;
 
@@ -31,7 +31,7 @@ public class Enemy : MonoBehaviour, IDamagable
     public int damage = 10;
     public float attackRate = 1.5f;
     private float lastAttackTime;
-    public float attackDistance = 1f;
+    public float attackDistance = 2f;
 
     private float playerDistance;
 
@@ -92,7 +92,6 @@ public class Enemy : MonoBehaviour, IDamagable
         // 플레이어로 타겟 변경
         if (playerDistance < detectDistance)
         {
-            Debug.Log("PassiveUpdate FIND");
             SetState(AIState.Attacking);
         }
     }
@@ -138,7 +137,6 @@ public class Enemy : MonoBehaviour, IDamagable
         {
             if (playerDistance < detectDistance)
             {
-                Debug.Log("AttackingUpdate FIND");
                 agent.isStopped = false;
                 NavMeshPath path = new NavMeshPath();
                 // 경로가 존재하는지 확인

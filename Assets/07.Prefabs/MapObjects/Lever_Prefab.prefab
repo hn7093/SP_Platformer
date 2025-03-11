@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 9211669602307936373}
   - component: {fileID: 8907127336082469235}
   - component: {fileID: 586214202284460159}
-  - component: {fileID: 1240905276451006971}
+  - component: {fileID: 2511414304156742645}
   m_Layer: 7
   m_Name: Lever
   m_TagString: Untagged
@@ -123,7 +123,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactName: "\uB808\uBC84"
   description: "\"E\"\uB97C \uB20C\uB7EC \uC791\uB3D9"
---- !u!65 &1240905276451006971
+  interAction:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!65 &2511414304156742645
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -142,8 +145,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.044060778, y: 0.044060774, z: 0.29749045}
-  m_Center: {x: 0.000000007450581, y: -0.0000000027939677, z: 0.14874522}
+  m_Size: {x: 0.3240213, y: 1.1841519, z: 0.3297052}
+  m_Center: {x: 0.0908153, y: -0.36480573, z: 5.1841995e-15}
 --- !u!1 &4006722261923311752
 GameObject:
   m_ObjectHideFlags: 0
