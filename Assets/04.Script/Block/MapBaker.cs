@@ -6,7 +6,6 @@ public class MapBaker : MonoBehaviour
     public GameObject[] gameObjects;
     public void ReBake(bool hide)
     {
-        Debug.Log("Rebake "+hide);
         for (int i = 0; i < gameObjects.Length; i++)
         {
             gameObjects[i].SetActive(!hide);

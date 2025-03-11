@@ -193,6 +193,11 @@ public class PlayerMovement : MonoBehaviour
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
+    public void ToggleInventory()
+    {
+        indentory?.Invoke();
+        ToggleCursor();
+    }
     bool CheckGrounded()
     {
         // 아래로 레이캐스트

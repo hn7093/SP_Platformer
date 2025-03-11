@@ -209,6 +209,7 @@ public class UIInventory : MonoBehaviour
                 }
             }
             RemoveSelectItem();
+            CharacterManager.Instance.Player.movement.ToggleInventory();
         }
     }
 

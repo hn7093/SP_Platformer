@@ -43,7 +43,6 @@ public class PlayerStat : MonoBehaviour, IDamagable
 
     public void Die()
     {
-        Debug.Log("플레이어가 죽었다.");
         Heal(100);
         CharacterManager.Instance.Player.movement.ResetPosition();
     }

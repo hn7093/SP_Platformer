@@ -60,20 +60,12 @@ public class Stat : MonoBehaviour
                 gray.a = originColor.a;
                 fill.color = gray;
             }
-            else
-            {
-                Debug.LogWarning("fillArea is null");
-            }
         }
         else
         {
             if (fill != null)
             {
                 fill.color = originColor;
-            }
-            else
-            {
-                Debug.LogWarning("fillArea is null");
             }
         }
     }
